@@ -4,7 +4,7 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
     compatibilityDate: "2024-11-01",
     devtools: { enabled: true },
-    modules: ["@nuxtjs/color-mode", "@nuxtjs/tailwindcss", "@nuxtjs/google-fonts"],
+    modules: ["@nuxtjs/color-mode", "@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@pinia/nuxt"],
     colorMode: {
         storage: "cookie",
     },
@@ -19,10 +19,10 @@ export default defineNuxtConfig({
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2E6914',
+                        primary: "#2E6914",
                     },
                 },
             },
         },
-    }
+    },
 });
