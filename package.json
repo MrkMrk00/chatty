@@ -1,0 +1,29 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint:fix": "biome check --write **/*.vue *.{ts,vue}"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
+    "@nuxtjs/color-mode": "^3.5.2",
+    "@nuxtjs/google-fonts": "3.2.0",
+    "clsx": "^2.1.1",
+    "nuxt": "^3.15.4",
+    "tailwind-merge": "^3.0.1",
+    "vue": "latest",
+    "vue-router": "latest"
+  },
+  "packageManager": "pnpm@10.2.1+sha512.398035c7bd696d0ba0b10a688ed558285329d27ea994804a52bad9167d8e3a72bcb993f9699585d3ca25779ac64949ef422757a6c31102c12ab932e5cbe5cc92",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@nuxtjs/tailwindcss": "^6.13.1"
+  }
+}
