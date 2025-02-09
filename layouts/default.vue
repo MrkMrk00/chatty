@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Header from "~/components/Header/Header.vue";
+import Header from "~/components/header/Header.vue";
 </script>
 
 <template>
@@ -8,6 +8,11 @@ import Header from "~/components/Header/Header.vue";
 </template>
 
 <style lang="postcss">
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
 body {
     font-family: IBM Plex Mono, sans-serif;
     font-weight: 600;

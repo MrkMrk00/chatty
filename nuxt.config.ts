@@ -4,7 +4,13 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
     compatibilityDate: "2024-11-01",
     devtools: { enabled: true },
-    modules: ["@nuxtjs/color-mode", "@nuxtjs/tailwindcss", "@nuxtjs/google-fonts", "@pinia/nuxt"],
+    modules: [
+        "@nuxtjs/color-mode",
+        "@nuxtjs/tailwindcss",
+        "@nuxtjs/google-fonts",
+        "@pinia/nuxt",
+        "pinia-plugin-persistedstate/nuxt",
+    ],
     colorMode: {
         storage: "cookie",
     },
@@ -24,5 +30,8 @@ export default defineNuxtConfig({
                 },
             },
         },
+    },
+    piniaPluginPersistedstate: {
+        storage: "localStorage",
     },
 });
