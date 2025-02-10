@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import Window from "~/components/window/Window.vue";
+definePageMeta({
+    middleware: "auth",
+});
 </script>
 
 <template>

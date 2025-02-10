@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-    titleTemplate: (chunk) => `ChaTTY${chunk ? ` - ${chunk}` : ''}`,
+    titleTemplate: (chunk) => `ChaTTY${chunk ? ` - ${chunk}` : ""}`,
 });
 </script>
 
