@@ -15,12 +15,12 @@ export const useConversationsStore = defineStore('conversations', {
         }
 
         return {
-            activeTab: activeTab,
+            activeTabIndex: activeTab,
             tabs: [] as WindowTab[],
         };
     },
     getters: {
-        getTab: (state) => (index: number) => {
+        getTabAt: (state) => (index: number) => {
             if (index > state.tabs.length - 1) {
                 return null;
             }
@@ -28,18 +28,18 @@ export const useConversationsStore = defineStore('conversations', {
             return state.tabs[index];
         },
         getActiveTab: (state) => {
-            return state.tabs[state.activeTab];
+            return state.tabs[state.activeTabIndex];
         },
     },
     actions: {
         closeTab(tabIndex: number) {
             let indexToGoTo = tabIndex;
-            if (tabIndex === this.activeTab && tabIndex > 0) {
+            if (tabIndex === this.activeTabIndex && tabIndex > 0) {
                 indexToGoTo = tabIndex - 1;
             }
 
             this.$patch({
-                activeTab: indexToGoTo,
+                activeTabIndex: indexToGoTo,
                 tabs: this.tabs.toSpliced(tabIndex, 1),
             });
 
@@ -53,7 +53,7 @@ export const useConversationsStore = defineStore('conversations', {
 
             this.$patch({
                 tabs: [...this.tabs, newTab],
-                activeTab: newTabIndex,
+                activeTabIndex: newTabIndex,
             });
         },
         goToTab(tabIndex: number) {
@@ -61,7 +61,7 @@ export const useConversationsStore = defineStore('conversations', {
                 return;
             }
 
-            this.activeTab = tabIndex;
+            this.activeTabIndex = tabIndex;
 
             // TODO: history popstate handler
             window.history.pushState({ index: tabIndex }, '', getUrlForTab(tabIndex, this.getActiveTab));
@@ -69,7 +69,7 @@ export const useConversationsStore = defineStore('conversations', {
         },
     },
     persist: {
-        omit: ['activeTab'],
+        omit: ['activeTabIndex'],
     },
 });
 

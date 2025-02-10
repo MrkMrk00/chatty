@@ -3,28 +3,8 @@ import Header from "~/components/header/Header.vue";
 </script>
 
 <template>
-    <Header />
-    <slot />
+    <div class="flex flex-col h-full w-full">
+        <Header />
+        <slot />
+    </div>
 </template>
-
-<style lang="postcss">
-html, body {
-    width: 100%;
-    height: 100%;
-}
-
-body {
-    font-family: IBM Plex Mono, sans-serif;
-    font-weight: 600;
-}
-
-.dark-mode body {
-    color: white;
-    background-color: #121212;
-}
-
-.light-mode body {
-    @apply bg-primary/10;
-    color: black;
-}
-</style>

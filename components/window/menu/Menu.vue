@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import ActionButton from '~/components/window/ActionButton.vue';
-import Tab from '~/components/window/menu/Tab.vue';
-import { PlusIcon } from '@heroicons/vue/24/solid';
-import { useConversationsStore } from '~/utils/stores/conversations';
+import Tab from "~/components/window/menu/Tab.vue";
+import { PlusIcon } from "@heroicons/vue/24/solid";
+import { useConversationsStore } from "~/utils/stores/conversations";
 const conversationsStore = useConversationsStore();
 
 function openNewTab() {
@@ -11,18 +10,19 @@ function openNewTab() {
 </script>
 
 <template>
-    <ClientOnly>
-        <menu class="inline-flex flex-row">
-            <Tab
-                v-for="(tab, tabIndex) in conversationsStore.tabs" 
-                :index="tabIndex"
-                :key="`tab-${tab.name}-${tabIndex}`"
-            />
+    <menu class="inline-flex flex-row border-b w-full overflow-x-scroll scroll-gradient py-2">
+        <ClientOnly>
+            <Tab v-for="(tab, tabIndex) in conversationsStore.tabs" :index="tabIndex"
+                :key="`tab-${tab.name}-${tabIndex}`" />
             <li class="inline-flex items-center px-2">
-                <ActionButton @click="openNewTab">
+                <button @click="openNewTab">
                     <PlusIcon class="h-[2em] p-1" />
-                </ActionButton>
+                </button>
             </li>
-        </menu>
-    </ClientOnly>
+
+            <template #fallback>
+                <li class="h-[2em] p-1" />
+            </template>
+        </ClientOnly>
+    </menu>
 </template>

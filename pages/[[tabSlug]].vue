@@ -3,7 +3,7 @@ import Window from "~/components/window/Window.vue";
 </script>
 
 <template>
-    <main class="w-full h-full sm:px-16 sm:py-8 px-2 py-4">
+    <main class="flex flex-col sm:py-8 py-4 h-full">
         <Window />
     </main>
 </template>
