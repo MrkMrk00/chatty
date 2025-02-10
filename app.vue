@@ -1,3 +1,9 @@
+<script setup lang="ts">
+useHead({
+    titleTemplate: (chunk) => `ChaTTY${chunk ? ` - ${chunk}` : ''}`,
+});
+</script>
+
 <template>
     <NuxtLayout>
         <NuxtPage />

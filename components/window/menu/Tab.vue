@@ -10,7 +10,7 @@ const { index } = defineProps<{ index: number }>();
 const conversationsStore = useConversationsStore();
 const { getTabAt: getTab } = storeToRefs(conversationsStore);
 
-const tab = getTab.value(index);
+const tab = computed(() => getTab.value(index));
 const isActive = computed(() => index === conversationsStore.activeTabIndex);
 
 function navigateToThisTab() {
@@ -23,17 +23,18 @@ function closeThisTab() {
 </script>
 
 <template>
-    <li class="inline-flex items-center gap-2 px-2 text-lg border-r" v-if="!!tab">
-        <a
+    <Title v-if="isActive">{{ tab?.name }}</Title>
+    <li v-if="!!tab" class="inline-flex items-center gap-2 px-2 text-lg border-r border-black dark:border-current">
+        <button
             class="text-nowrap"
-            :href="getUrlForTab(index, tab)" 
-            @click.prevent="navigateToThisTab"
+            @click="navigateToThisTab"
+            @click.middle="closeThisTab"
         >
             <span :class="cn('text-xs align-middle pb-1 w-[1em]', { 'text-transparent': !isActive })">
                 &#x25CF;
             </span>
             {{ clampString(tab.name) }}
-        </a>
+        </button>
         <button @click="closeThisTab">
             <XMarkIcon class="h-[1.25em]" />
         </button>

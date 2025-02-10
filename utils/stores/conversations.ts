@@ -33,15 +33,21 @@ export const useConversationsStore = defineStore('conversations', {
     },
     actions: {
         closeTab(tabIndex: number) {
-            let indexToGoTo = tabIndex;
-            if (tabIndex === this.activeTabIndex && tabIndex > 0) {
-                indexToGoTo = tabIndex - 1;
+            type PatchObject = Partial<Parameters<Parameters<typeof this.$patch>[0]>[0]>;
+            const patchObject: PatchObject = {
+                tabs: this.tabs.toSpliced(tabIndex, 1)
+            };
+
+            if (tabIndex <= this.activeTabIndex) {
+                let indexToGoTo = tabIndex;
+                while (indexToGoTo >= patchObject.tabs!.length && indexToGoTo >= 0) {
+                    indexToGoTo--;
+                }
+
+                patchObject.activeTabIndex = Math.max(0, indexToGoTo);
             }
 
-            this.$patch({
-                activeTabIndex: indexToGoTo,
-                tabs: this.tabs.toSpliced(tabIndex, 1),
-            });
+            this.$patch(patchObject);
 
             if (this.tabs.length === 0) {
                 this.openNewTab();
@@ -62,10 +68,6 @@ export const useConversationsStore = defineStore('conversations', {
             }
 
             this.activeTabIndex = tabIndex;
-
-            // TODO: history popstate handler
-            window.history.pushState({ index: tabIndex }, '', getUrlForTab(tabIndex, this.getActiveTab));
-            document.title = this.getActiveTab.name;
         },
     },
     persist: {
