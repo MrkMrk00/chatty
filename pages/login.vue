@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Input from "~/components/Input.vue";
-import { loginValidator } from '~/utils/auth';
+import { loginValidator } from "~/utils/auth";
 
 function getEmptyErrorState() {
     return {
@@ -10,7 +10,7 @@ function getEmptyErrorState() {
 }
 
 const errors = ref(getEmptyErrorState());
-const formRef = useTemplateRef('formRef');
+const formRef = useTemplateRef("formRef");
 
 function validateForm() {
     if (!formRef.value) {
@@ -47,25 +47,29 @@ function handleLogin() {
         return;
     }
 
-
-    const req = new Request('/api/login', {
-        method: 'POST',
+    const req = new Request("/api/login", {
+        method: "POST",
         body: JSON.stringify(formData),
-        headers: { 
-            'Content-Type': 'application/json',
+        headers: {
+            "Content-Type": "application/json",
         },
     });
 
-    fetch(req).then(r => {
-        if (r.ok) {
-            navigateTo('/');
-        }
-    }).catch(err => alert(`Unexpected error ${err}`));
+    fetch(req)
+        .then(async (r) => {
+            if (!r.ok) {
+                throw new Error(await r.json());
+            }
+
+            const { $toast } = useNuxtApp();
+            $toast("Sucessfuly logged in!");
+            navigateTo("/");
+        })
+        .catch((err) => alert(`Unexpected error ${err}`));
 }
 
 function hasErrors() {
-    return !errors.value.email.length 
-        && !errors.value.password.length;
+    return !errors.value.email.length && !errors.value.password.length;
 }
 </script>
 
@@ -102,7 +106,7 @@ function hasErrors() {
             </label>
 
             <div class="flex justify-end">
-                <button type="submit" class="text-primary-foreground bg-primary/30 px-4 py-2">
+                <button type="submit" class="dark:text-primary-foreground bg-primary/30 px-4 py-2">
                     Log-in
                 </button>
             </div>

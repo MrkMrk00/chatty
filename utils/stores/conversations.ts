@@ -1,16 +1,31 @@
 import { defineStore } from "pinia";
 import { getCurrentTab } from "~/utils/url";
 
-export type WindowTab = {
-    name: string;
+export type Message = {
+    content: string;
+    author: "user" | "bot";
+    timestamp: number;
 };
 
-export const useConversationsStore = defineStore('conversations', {
+export type WindowTab = {
+    name: string;
+    chatHistory: Message[];
+};
+
+function createNewTab(tabIndex: number, tab?: Partial<WindowTab>): WindowTab {
+    return {
+        name: `New Tab ${tabIndex}`,
+        chatHistory: [],
+        ...Object.fromEntries(Object.entries(tab ?? {}).filter(([, v]) => !!v)),
+    };
+}
+
+export const useConversationsStore = defineStore("conversations", {
     state: () => {
         const route = useRoute();
 
         let activeTab = 0;
-        if (typeof route.params.tabSlug === 'string') {
+        if (typeof route.params.tabSlug === "string") {
             activeTab = getCurrentTab(route.params.tabSlug) ?? 0;
         }
 
@@ -35,12 +50,12 @@ export const useConversationsStore = defineStore('conversations', {
         closeTab(tabIndex: number) {
             type PatchObject = Partial<Parameters<Parameters<typeof this.$patch>[0]>[0]>;
             const patchObject: PatchObject = {
-                tabs: this.tabs.toSpliced(tabIndex, 1)
+                tabs: this.tabs.toSpliced(tabIndex, 1),
             };
 
             if (tabIndex <= this.activeTabIndex) {
                 let indexToGoTo = tabIndex;
-                while (indexToGoTo >= patchObject.tabs!.length && indexToGoTo >= 0) {
+                while (indexToGoTo >= (patchObject.tabs?.length ?? Number.POSITIVE_INFINITY) && indexToGoTo >= 0) {
                     indexToGoTo--;
                 }
 
@@ -55,7 +70,7 @@ export const useConversationsStore = defineStore('conversations', {
         },
         openNewTab(name?: string) {
             const newTabIndex = this.tabs.length;
-            const newTab = { name: name ?? `New Tab ${newTabIndex}` };
+            const newTab = createNewTab(newTabIndex, { name });
 
             this.$patch({
                 tabs: [...this.tabs, newTab],
@@ -69,9 +84,28 @@ export const useConversationsStore = defineStore('conversations', {
 
             this.activeTabIndex = tabIndex;
         },
+        async *sendMessage(message: string) {
+            this.getActiveTab.chatHistory.push({
+                content: message,
+                timestamp: Date.now() * 1000,
+                author: "user",
+            });
+
+            let completeMessage = "";
+            for await (const token of generateMockResponse()) {
+                completeMessage += `${token} `;
+
+                yield token;
+            }
+
+            this.getActiveTab.chatHistory.push({
+                content: completeMessage,
+                timestamp: Date.now() * 1000,
+                author: "bot",
+            });
+        },
     },
     persist: {
-        omit: ['activeTabIndex'],
+        omit: ["activeTabIndex"],
     },
 });
-
