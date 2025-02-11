@@ -79,11 +79,11 @@ function toggleShowCommands() {
                     <table class="w-full">
                         <tbody>
                             <tr>
-                                <td class="text-primary-foreground">/rename {name}&emsp;</td>
+                                <td class="dark:text-primary-foreground">/rename {name}&emsp;</td>
                                 <td align="right">rename tab</td>
                             </tr>
                             <tr>
-                                <td class="text-primary-foreground">/clear</td>
+                                <td class="dark:text-primary-foreground">/clear</td>
                                 <td align="right">clear</td>
                             </tr>
                         </tbody>

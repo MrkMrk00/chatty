@@ -1,75 +1,28 @@
-# Nuxt Minimal Starter
+# ChaTTY
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A chat bot application themed "like a terminal emulator".
 
-## Setup
+## Tech and installation
 
-Make sure to install dependencies:
+The project runs on Nuxt.js with Pinia as a state manager.
 
-```bash
-# npm
-npm install
+### Install
 
-# pnpm
+```{bash}
 pnpm install
 
-# yarn
-yarn install
-
-# bun
-bun install
+pnpm run dev
 ```
 
-## Development Server
+### Some notes
 
-Start the development server on `http://localhost:3000`:
+The auth state lives in a cookie. It's just a JSON encoded object with a single key - `email`.
+If the cookie is present, you are logged in, otherwise - you are not.
 
-```bash
-# npm
-npm run dev
 
-# pnpm
-pnpm dev
+The entire state of the application (except for the auth cookie) lives in localStorage. 
+The state from Pinia is automatically synced with a persistence plugin. This obviously wouldn't fly
+in a production environment, but this technique could be used to speed up the loading of the chat history.
+Instead of loading the data from the server on every request a perhaps stale state could be 
+saved and retrieved first from localStorage to at least render something to the user.
 
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

@@ -37,7 +37,7 @@ function clearScreen() {
 
 <template>
     <div class="flex flex-col max-w-6xl px-4 w-full mx-auto h-full overflow-hidden">
-        <div class="flex flex-col w-full h-full border rounded-xl shadow-2xl overflow-hidden">
+        <div class="flex flex-col w-full h-full border rounded-xl dark:shadow-none shadow-lg overflow-hidden">
             <Menu />
 
             <div class="flex flex-col justify-between bg-primary/40 h-full overflow-hidden gap-4">

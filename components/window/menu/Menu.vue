@@ -7,6 +7,12 @@ const conversationsStore = useConversationsStore();
 function openNewTab() {
     conversationsStore.openNewTab();
 }
+
+onMounted(() => {
+    if (!conversationsStore.tabs.length) {
+        conversationsStore.openNewTab();
+    }
+});
 </script>
 
 <template>
