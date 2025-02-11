@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import { getCurrentTab } from "~/utils/url";
+import { parseCommand } from "~/utils/commands";
 
 export type Message = {
     content: string;
-    author: "user" | "bot";
+    author: "user" | "bot" | "system";
     timestamp: number;
 };
 
@@ -18,6 +19,10 @@ function createNewTab(tabIndex: number, tab?: Partial<WindowTab>): WindowTab {
         chatHistory: [],
         ...Object.fromEntries(Object.entries(tab ?? {}).filter(([, v]) => !!v)),
     };
+}
+
+function getCurrentTimestampSeconds() {
+    return Date.now() / 1000;
 }
 
 export const useConversationsStore = defineStore("conversations", {
@@ -87,9 +92,36 @@ export const useConversationsStore = defineStore("conversations", {
         async *sendMessage(message: string) {
             this.getActiveTab.chatHistory.push({
                 content: message,
-                timestamp: Date.now() * 1000,
+                timestamp: getCurrentTimestampSeconds(),
                 author: "user",
             });
+
+            if (message.startsWith("/")) {
+                const command = parseCommand(message);
+                if (command.error) {
+                    this.getActiveTab.chatHistory.push({
+                        content: `eval error(${command.type}): ${command.message}`,
+                        timestamp: getCurrentTimestampSeconds(),
+                        author: "system",
+                    });
+
+                    return;
+                }
+
+                switch (command.type) {
+                    case CommandType.rename:
+                        this.getActiveTab.name = command.tabName;
+                        break;
+
+                    case CommandType.clear:
+                        this.clearChatHistory();
+                        break;
+
+                    // more commands here :)
+                }
+
+                return;
+            }
 
             let completeMessage = "";
             for await (const token of generateMockResponse()) {
@@ -100,9 +132,12 @@ export const useConversationsStore = defineStore("conversations", {
 
             this.getActiveTab.chatHistory.push({
                 content: completeMessage,
-                timestamp: Date.now() * 1000,
+                timestamp: getCurrentTimestampSeconds(),
                 author: "bot",
             });
+        },
+        clearChatHistory() {
+            this.getActiveTab.chatHistory = [];
         },
     },
     persist: {

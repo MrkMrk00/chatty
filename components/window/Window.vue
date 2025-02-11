@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import Menu from "~/components/window/menu/Menu.vue";
 import TextArea from "~/components/chat/TextArea.vue";
+import History from "~/components/window/History.vue";
 import { storeToRefs } from "pinia";
 import { useConversationsStore } from "~/utils/stores/conversations";
 
 const conversationsStore = useConversationsStore();
-const { activeTabIndex, getActiveTab } = storeToRefs(conversationsStore);
+const { activeTabIndex } = storeToRefs(conversationsStore);
 
 const answersRef = useTemplateRef("answersRef");
 const currentMessage = ref("");
@@ -28,6 +29,10 @@ async function doSubmitMessage(message: string) {
         currentMessage.value = "";
     }
 }
+
+function clearScreen() {
+    conversationsStore.clearChatHistory();
+}
 </script>
 
 <template>
@@ -36,28 +41,19 @@ async function doSubmitMessage(message: string) {
             <Menu />
 
             <div class="flex flex-col justify-between bg-primary/40 h-full overflow-hidden gap-4">
-                <div class="flex flex-col overflow-scroll h-full p-2 gap-4" ref="answersRef">
-                    <div v-for="message in getActiveTab.chatHistory">
-                        <span>{{ new Date(message.timestamp / 1000).toLocaleTimeString() }} :: </span>
-
-                        <span v-if="message.author === 'bot'">ChaTTY answered with: <br></span>
-                        <span v-else>usr &gt;&nbsp;</span>
-
-                        <span :class="cn({ 'text-primary-foreground': message.author === 'user' })">
-                            {{ message.content }}
-                        </span>
-                    </div>
-                    <span v-if="getActiveTab.chatHistory.length === 0" class="w-full text-center font-lg">
-                        You can ask me anything, I won't tell on you! ;)
-                    </span>
-                    <span v-if="currentMessage">ChaTTY is thinking:</span>
-                    {{ currentMessage }}
+                <div class="flex flex-col overflow-y-scroll h-full p-2 gap-4" ref="answersRef">
+                    <ClientOnly>
+                        <History>
+                            <span v-if="currentMessage">ChaTTY is thinking:</span>
+                            {{ currentMessage }}
+                        </History>
+                    </ClientOnly>
                 </div>
 
                 <hr>
                 <div class="h-full max-h-[30%]">
                     <TextArea :disabled="currentMessage !== ''" :hostname="`tab-${activeTabIndex}`"
-                        @submit-message="doSubmitMessage" />
+                        @submit-message="doSubmitMessage" @clr-scr="clearScreen" />
                 </div>
             </div>
         </div>
