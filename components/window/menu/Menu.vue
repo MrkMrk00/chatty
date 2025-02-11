@@ -10,7 +10,7 @@ function openNewTab() {
 </script>
 
 <template>
-    <menu class="inline-flex flex-row border-b w-full overflow-x-scroll scroll-gradient py-2 shadow">
+    <menu class="inline-flex flex-row border-b w-full overflow-x-scroll scroll-gradient py-2 shadow flex-shrink-0">
         <ClientOnly>
             <Tab v-for="(tab, tabIndex) in conversationsStore.tabs" :index="tabIndex"
                 :key="`tab-${tab.name}-${tabIndex}`" />

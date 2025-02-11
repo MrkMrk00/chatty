@@ -93,7 +93,7 @@ export const useConversationsStore = defineStore("conversations", {
 
             let completeMessage = "";
             for await (const token of generateMockResponse()) {
-                completeMessage += `${token} `;
+                completeMessage += token;
 
                 yield token;
             }

@@ -5,8 +5,9 @@ import { storeToRefs } from "pinia";
 import { useConversationsStore } from "~/utils/stores/conversations";
 
 const conversationsStore = useConversationsStore();
-const { activeTabIndex } = storeToRefs(conversationsStore);
+const { activeTabIndex, getActiveTab } = storeToRefs(conversationsStore);
 
+const answersRef = useTemplateRef("answersRef");
 const currentMessage = ref("");
 
 async function doSubmitMessage(message: string) {
@@ -14,27 +15,50 @@ async function doSubmitMessage(message: string) {
         return;
     }
 
-    for await (const token of conversationsStore.sendMessage(message)) {
-        currentMessage.value += ` ${token}`;
+    try {
+        for await (const token of conversationsStore.sendMessage(message)) {
+            currentMessage.value += token;
+
+            // scroll to the bottom of the answers container
+            if (answersRef.value) {
+                answersRef.value.scrollTop = answersRef.value.scrollHeight;
+            }
+        }
+    } finally {
+        currentMessage.value = "";
     }
-
-    currentMessage.value = "";
 }
-
 </script>
 
 <template>
-    <div class="flex flex-col max-w-6xl px-4 w-full h-full mx-auto">
-        <div class="flex flex-col w-full h-full border rounded-xl shadow-2xl overflow-hidden overflow-hidden">
+    <div class="flex flex-col max-w-6xl px-4 w-full mx-auto h-full overflow-hidden">
+        <div class="flex flex-col w-full h-full border rounded-xl shadow-2xl overflow-hidden">
             <Menu />
-            <div class="bg-primary/40 h-full">
-                <div>
+
+            <div class="flex flex-col justify-between bg-primary/40 h-full overflow-hidden gap-4">
+                <div class="flex flex-col overflow-scroll h-full p-2 gap-4" ref="answersRef">
+                    <div v-for="message in getActiveTab.chatHistory">
+                        <span>{{ new Date(message.timestamp / 1000).toLocaleTimeString() }} :: </span>
+
+                        <span v-if="message.author === 'bot'">ChaTTY answered with: <br></span>
+                        <span v-else>usr &gt;&nbsp;</span>
+
+                        <span :class="cn({ 'text-primary-foreground': message.author === 'user' })">
+                            {{ message.content }}
+                        </span>
+                    </div>
+                    <span v-if="getActiveTab.chatHistory.length === 0" class="w-full text-center font-lg">
+                        You can ask me anything, I won't tell on you! ;)
+                    </span>
+                    <span v-if="currentMessage">ChaTTY is thinking:</span>
                     {{ currentMessage }}
                 </div>
-                <TextArea 
-                    :hostname="`tab-${activeTabIndex}`" 
-                    @submit-message="doSubmitMessage"
-                />
+
+                <hr>
+                <div class="h-full max-h-[30%]">
+                    <TextArea :disabled="currentMessage !== ''" :hostname="`tab-${activeTabIndex}`"
+                        @submit-message="doSubmitMessage" />
+                </div>
             </div>
         </div>
     </div>

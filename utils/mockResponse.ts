@@ -1,6 +1,8 @@
 let lorem: string[] | null = null;
 let abortController: AbortController | null = null;
 
+const AVG_WORDS_PER_SENTENCE = 15;
+
 export async function* generateMockResponse(): AsyncGenerator<string> {
     if (abortController) {
         abortController.abort();
@@ -29,11 +31,27 @@ export async function* generateMockResponse(): AsyncGenerator<string> {
             .split(' ');
     }
 
-    let responseLength = randomInt(150);
-    while (--responseLength > 0) {
+    let insideSentence = false;
+
+    let responseLength = randomInt(200) + 100;
+    while (responseLength-- > 0) {
         await waitFor(randomInt(100));
 
-        yield lorem[randomInt(lorem.length - 1)];
+        let token = lorem[randomInt(lorem.length - 1)];
+        if (!insideSentence) {
+            token = ucfirst(token);
+            insideSentence = true;
+        }
+
+        yield token;
+
+        const shouldEndSentence = Math.random() < 1 / AVG_WORDS_PER_SENTENCE;
+        if (shouldEndSentence || responseLength === 0) {
+            yield '.';
+            insideSentence = false;
+        }
+
+        yield ' ';
     }
 }
 
@@ -48,3 +66,6 @@ function randomInt(max: number) {
     return Math.floor(Math.random() * max);
 }
 
+function ucfirst(str: string) {
+    return str[0].toUpperCase() + str.slice(1);
+}

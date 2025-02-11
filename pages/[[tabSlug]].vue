@@ -6,7 +6,7 @@ definePageMeta({
 </script>
 
 <template>
-    <main class="flex flex-col sm:py-8 py-4 h-full">
+    <main class="flex flex-col sm:py-8 py-4 h-full overflow-hidden">
         <Window />
     </main>
 </template>
