@@ -3,12 +3,12 @@ export const CommandType = {
     clear: "clear",
 } as const;
 
-type RenameCommand = {
+export type RenameCommand = {
     type: typeof CommandType.rename;
     tabName: string;
 };
 
-type ClearCommand = {
+export type ClearCommand = {
     type: typeof CommandType.clear;
 };
 

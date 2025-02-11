@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import { getCurrentTab } from "~/utils/url";
 import { parseCommand } from "~/utils/commands";
+import { useRoute } from "vue-router";
+import { CommandType } from "~/utils/commands";
+import { generateMockResponse } from "~/utils/mockResponse";
 
 export type Message = {
     content: string;
@@ -30,7 +33,7 @@ export const useConversationsStore = defineStore("conversations", {
         const route = useRoute();
 
         let activeTab = 0;
-        if (typeof route.params.tabSlug === "string") {
+        if (route && typeof route.params.tabSlug === "string") {
             activeTab = getCurrentTab(route.params.tabSlug) ?? 0;
         }
 
