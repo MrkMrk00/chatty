@@ -24,11 +24,7 @@ export async function* generateMockResponse(): AsyncGenerator<string> {
             throw e;
         }
 
-        lorem = rawLorem
-            .replaceAll('.', '')
-            .replaceAll(',', '')
-            .toLowerCase()
-            .split(' ');
+        lorem = rawLorem.replaceAll(".", "").replaceAll(",", "").toLowerCase().split(" ");
     }
 
     let insideSentence = false;
@@ -47,11 +43,11 @@ export async function* generateMockResponse(): AsyncGenerator<string> {
 
         const shouldEndSentence = Math.random() < 1 / AVG_WORDS_PER_SENTENCE;
         if (shouldEndSentence || responseLength === 0) {
-            yield '.';
+            yield ".";
             insideSentence = false;
         }
 
-        yield ' ';
+        yield " ";
     }
 }
 

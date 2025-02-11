@@ -51,7 +51,7 @@ function clearScreen() {
                 </div>
 
                 <hr>
-                <div class="h-full max-h-[30%]">
+                <div class="h-full max-h-[50%]">
                     <TextArea :disabled="currentMessage !== ''" :hostname="`tab-${activeTabIndex}`"
                         @submit-message="doSubmitMessage" @clr-scr="clearScreen" />
                 </div>

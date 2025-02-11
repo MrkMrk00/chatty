@@ -18,6 +18,8 @@ useOnTabChange(() => {
     textAreaRef.value?.focus();
 });
 
+const showCommands = ref(false);
+
 const currentTime = useCurrentTime();
 function formatTime(now: Date) {
     return now.toLocaleTimeString();
@@ -54,14 +56,24 @@ function autoresize() {
     textAreaRef.value.style.height = "auto";
     textAreaRef.value.style.height = `${Math.min(textAreaRef.value.scrollHeight, 200)}px`;
 }
+
+function toggleShowCommands() {
+    showCommands.value = !showCommands.value;
+}
 </script>
 
 <template>
     <div class="w-full justify-between flex flex-row gap-2 px-2">
         <div class="flex gap-2 flex-col md:flex-row w-full">
             <div class="mix-w-fit text-nowrap h-full">
-                usr@{{ hostname }} <ClientOnly>{{ formatTime(currentTime) }}</ClientOnly><br>
-                <span class="text-sm">
+                <div class="flex flex-row flex-wrap gap-2 items-center">
+                    <span>usr@{{ hostname }}</span>
+                    <ClientOnly>{{ formatTime(currentTime) }}</ClientOnly>
+                    <button @click="toggleShowCommands" class="bg-red-500 p-1 text-sm md:hidden inline shadow">
+                        /commands?
+                    </button>
+                </div>
+                <span :class="cn('text-sm md:inline', { 'hidden': !showCommands })">
                     Commands:<br>
                     <hr>
                     <table class="w-full">
@@ -71,13 +83,7 @@ function autoresize() {
                                 <td align="right">rename tab</td>
                             </tr>
                             <tr>
-                                <td class="text-primary-foreground">/clear&emsp;<br>&emsp;or
-                                    <div class="inline dark:text-white text-black">
-                                        Ctrl +
-                                        <span class="h-[1.6em] rounded-sm bg-black/20 dark:bg-white/20 p-1">l
-                                        </span>
-                                    </div>
-                                </td>
+                                <td class="text-primary-foreground">/clear</td>
                                 <td align="right">clear</td>
                             </tr>
                         </tbody>

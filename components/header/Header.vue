@@ -3,7 +3,12 @@ import ColorModeSwitch from "~/components/header/ColorModeSwitch.vue";
 import { CommandLineIcon } from "@heroicons/vue/24/solid";
 import { AUTH_COOKIE_NAME } from "~/utils/auth";
 
-const loginCookie = useCookie<{ email: string }>(AUTH_COOKIE_NAME);
+const loginCookie = useCookie<{ email: string } | null>(AUTH_COOKIE_NAME);
+
+function logout() {
+    loginCookie.value = null;
+    navigateTo("/login");
+}
 
 </script>
 
@@ -15,10 +20,11 @@ const loginCookie = useCookie<{ email: string }>(AUTH_COOKIE_NAME);
                 <h1 class="text-xl group-hover:underline">ChaTTY</h1>&nbsp;
                 <CommandLineIcon class="h-[2em]" />
             </NuxtLink>
-            <div class="flex flex-row gap-4 items-center">
-                <div class="text-sm text-center" v-if="loginCookie.email">
-                    {{ loginCookie.email.split('@')[0] }}<br>
-                    <button class="bg-red-500 py-1 px-2 hover:brightness-90 transition-all">Log out</button>
+
+            <div class="flex flex-col sm:flex-row gap-4 items-end sm:items-center py-4">
+                <div class="text-sm text-center" v-if="loginCookie?.email">
+                    <span class="hidden sm:inline">{{ loginCookie.email.split('@')[0] }}<br></span>
+                    <button @click="logout" class="bg-red-500 py-1 px-2 hover:brightness-90 transition-all">Log out</button>
                 </div>
 
                 <ColorModeSwitch />
